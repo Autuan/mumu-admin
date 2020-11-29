@@ -1,9 +1,7 @@
 package com.autuan.project.system.user.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,8 +25,6 @@ public class IndexController extends BaseController {
     @Autowired
     private RuoYiConfig ruoYiConfig;
 
-    @Autowired
-    private ISalesmanCustomService salesmanCustomService;
     // 系统首页
     @GetMapping("/index")
     public String index(ModelMap mmap) {
@@ -49,27 +45,4 @@ public class IndexController extends BaseController {
         return "skin";
     }
 
-    // 系统介绍
-    @GetMapping("/system/main")
-    public String main(ModelMap mmap) {
-        mmap.put("version", ruoYiConfig.getVersion());
-        // 首页数据
-        // 招募数量
-        Integer allCount = salesmanCustomService.allCount();
-        mmap.put("allCount",allCount);
-        // 上月招募
-        Integer lastMoonCount = salesmanCustomService.lastMoonCount();
-        mmap.put("lastMoonCount",lastMoonCount);
-        Integer thisMoonCount = salesmanCustomService.thisMoonCount();
-        mmap.put("thisMoonCount",thisMoonCount);
-        // 业绩总记
-        BigDecimal allRewardCount = salesmanCustomService.allRewardCount();
-        mmap.put("allRewardCount",allRewardCount);
-        // 上月业绩总记
-        BigDecimal lastRewardCount = salesmanCustomService.lastRewardCount();
-        mmap.put("lastRewardCount",lastRewardCount);
-        BigDecimal thisRewardCount = salesmanCustomService.thisRewardCount();
-        mmap.put("thisRewardCount",thisRewardCount);
-        return "main";
-    }
 }
