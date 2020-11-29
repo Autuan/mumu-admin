@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改任务')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-task-edit">
+        <input id="taskId" th:value="${task.id}" type="hidden">
+        <input id="prefix" field="*{prefix}" type="hidden">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">总数：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" id="allNum" disabled="true" th:value="${allNum}">
+            </div>
+            <label class="col-sm-3 control-label">已使用：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" id="usedNum" disabled="true" th:value="${usedNum}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">未使用：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" disabled="true" th:value="${unusedNum}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">CODE值：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" id="inputCode" type="text" placeholder="输入CODE">
+            </div>
+        </div>
+    </form>
+
+    <!-- 已经添加code管理 -->
+
+    <div class="col-sm-12 select-table table-striped">
+        <table id="bootstrap-table"></table>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "promote/task";
+    $("#form-task-edit").validate({
+        focusCleanup: true
+    });
+
+    function removeCode(id) {
+        var data = {"ids": id};
+        let url = ctx + "promote/linkSalesmanTask/remove";
+        $.operate.submit(url, "post", "json", data);
+    }
+
+    function submitHandler() {
+        let param = {
+            taskId: $('#taskId').val(),
+            num: $('#num').val(),
+            allNum: $('#allNum').val(),
+            // inputCode: $('#inputCode').val(),
+            inputCode: Bee.StringUtils.trim($('#inputCode').val()),
+        };
+        Base.Network.post({
+            url: ctx + 'promote/task/custom/setCode',
+            data: param,
+            contentType: 'application/json',
+            successParse: function (data) {
+                $.modal.close();
+                parent.$.modal.msgSuccess('操作成功');
+                parent.$.table.refresh();
+            }
+        })
+    }
+
+    var options = {
+        url: ctx + "promote/linkSalesmanTask/custom/listTaskCode/" + $('#taskId').val(),
+        createUrl: prefix + "/add",
+        updateUrl: prefix + "/edit/{id}",
+        removeUrl: prefix + "/remove",
+        exportUrl: prefix + "/export",
+        modalName: "业务员任务领取记录",
+        sortName: 'createTime',
+        sortOrder: 'desc',
+        pageSize: 50,
+        pageList: [25, 50],
+        columns: [{
+            checkbox: true
+        },
+            {
+                field: 'id',
+                title: 'id',
+                visible: false
+            },
+            {
+                field: 'code',
+                title: 'CODE'
+            },
+            {
+                field: 'status',
+                visible: false,
+                title: '状态',
+                formatter: function (value, row, index) {
+                    switch (value) {
+                        case 0:
+                            return '未申请';
+                            break;
+                        case 1:
+                            return '审核中';
+                            break;
+                        case 2:
+                            return '审核通过';
+                            break;
+                        case 3:
+                            return '审核拒绝';
+                            break;
+                    }
+                }
+            },
+            {
+                field: 'type',
+                title: 'code状态',
+                formatter: function (value, row, index) {
+                    switch (value) {
+                        case 0:
+                            return '未使用';
+                            break;
+                        case 1:
+                            return '正在使用';
+                            break;
+                        case 2:
+                            return '已停用';
+                            break;
+                        case 3:
+                            return '可以使用';
+                            break;
+                    }
+                }
+            },
+            {
+                field: 'createTime',
+                title: '创建时间',
+                formatter: function (value, row, index) {
+                    return Bee.StringUtils.isBlank(value) ? '-' : value.replace("T", " ");
+                }
+            },
+            {
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var actions = [];
+                    let delAble = false;
+                    // 未绑定业务员 且 code未使用
+                    delAble = Bee.StringUtils.isBlank(row.salesmanId) && row.type === 0;
+                    if (delAble) {
+                        actions.push('<a class="btn btn-danger btn-xs " href="javascript:void(0)" onclick="removeCode(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    }
+                    return actions.join('');
+                }
+            }
+        ]
+    };
+
+    $(function () {
+        $.table.init(options);
+    })
+</script>
+</body>
+</html>

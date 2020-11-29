@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.task.mapper.TaskMapper">
+    
+    <resultMap type="Task" id="TaskResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="prefix"    column="prefix"    />
+        <result property="paramId"    column="param_id"    />
+        <result property="reward"    column="reward"    />
+        <result property="rewardBeginTime"    column="reward_begin_time"    />
+        <result property="rewardStopTime"    column="reward_stop_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="tags"    column="tags"    />
+        <result property="articleId"    column="article_id"    />
+        <result property="priority"    column="priority"    />
+        <result property="articleTitle"    column="article_title"    />
+        <result property="image"    column="image"    />
+        <result property="bgImg"    column="bg_img"    />
+        <result property="summary"    column="summary"    />
+        <result property="codePrefix"    column="code_prefix"    />
+        <result property="codePrefixDigit"    column="code_prefix_digit"    />
+        <result property="assignType"    column="assign_type"    />
+        <result property="indexName"    column="index_name"    />
+        <result property="isHidden"    column="is_hidden"    />
+    </resultMap>
+
+    <sql id="selectTaskVo">
+        select id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by, tags, article_id, priority, article_title, image, bg_img, summary, code_prefix, code_prefix_digit, assign_type, index_name, is_hidden from tab_task
+    </sql>
+
+    <select id="selectTaskList" parameterType="Task" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="prefix != null  and prefix != ''"> and prefix like concat('%', #{prefix}, '%')</if>
+            <if test="paramId != null  and paramId != ''"> and param_id = #{paramId}</if>
+            <if test="reward != null "> and reward = #{reward}</if>
+            <if test="rewardBeginTime != null "> and reward_begin_time = #{rewardBeginTime}</if>
+            <if test="rewardStopTime != null "> and reward_stop_time = #{rewardStopTime}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+            <if test="articleId != null  and articleId != ''"> and article_id = #{articleId}</if>
+            <if test="priority != null "> and priority = #{priority}</if>
+            <if test="articleTitle != null  and articleTitle != ''"> and article_title like concat('%', #{articleTitle}, '%')</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="bgImg != null  and bgImg != ''"> and bg_img = #{bgImg}</if>
+            <if test="summary != null  and summary != ''"> and summary like concat('%', #{summary}, '%')</if>
+            <if test="codePrefix != null  and codePrefix != ''"> and code_prefix = #{codePrefix}</if>
+            <if test="codePrefixDigit != null "> and code_prefix_digit = #{codePrefixDigit}</if>
+            <if test="assignType != null "> and assign_type = #{assignType}</if>
+            <if test="indexName != null  and indexName != ''"> and index_name like concat('%', #{indexName}, '%')</if>
+            <if test="isHidden != null "> and is_hidden = #{isHidden}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskById" parameterType="String" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTask" parameterType="Task">
+        insert into tab_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="prefix != null  and prefix != ''">prefix,</if>
+            <if test="paramId != null  and paramId != ''">param_id,</if>
+            <if test="reward != null ">reward,</if>
+            <if test="rewardBeginTime != null ">reward_begin_time,</if>
+            <if test="rewardStopTime != null ">reward_stop_time,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="articleId != null  and articleId != ''">article_id,</if>
+            <if test="priority != null ">priority,</if>
+            <if test="articleTitle != null  and articleTitle != ''">article_title,</if>
+            <if test="image != null  and image != ''">image,</if>
+            <if test="bgImg != null  and bgImg != ''">bg_img,</if>
+            <if test="summary != null  and summary != ''">summary,</if>
+            <if test="codePrefix != null  and codePrefix != ''">code_prefix,</if>
+            <if test="codePrefixDigit != null ">code_prefix_digit,</if>
+            <if test="assignType != null ">assign_type,</if>
+            <if test="indexName != null  and indexName != ''">index_name,</if>
+            <if test="isHidden != null ">is_hidden,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="prefix != null  and prefix != ''">#{prefix},</if>
+            <if test="paramId != null  and paramId != ''">#{paramId},</if>
+            <if test="reward != null ">#{reward},</if>
+            <if test="rewardBeginTime != null ">#{rewardBeginTime},</if>
+            <if test="rewardStopTime != null ">#{rewardStopTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="articleId != null  and articleId != ''">#{articleId},</if>
+            <if test="priority != null ">#{priority},</if>
+            <if test="articleTitle != null  and articleTitle != ''">#{articleTitle},</if>
+            <if test="image != null  and image != ''">#{image},</if>
+            <if test="bgImg != null  and bgImg != ''">#{bgImg},</if>
+            <if test="summary != null  and summary != ''">#{summary},</if>
+            <if test="codePrefix != null  and codePrefix != ''">#{codePrefix},</if>
+            <if test="codePrefixDigit != null ">#{codePrefixDigit},</if>
+            <if test="assignType != null ">#{assignType},</if>
+            <if test="indexName != null  and indexName != ''">#{indexName},</if>
+            <if test="isHidden != null ">#{isHidden},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTask" parameterType="Task">
+        update tab_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="prefix != null  and prefix != ''">prefix = #{prefix},</if>
+            <if test="paramId != null  and paramId != ''">param_id = #{paramId},</if>
+            <if test="reward != null ">reward = #{reward},</if>
+            <if test="rewardBeginTime != null ">reward_begin_time = #{rewardBeginTime},</if>
+            <if test="rewardStopTime != null ">reward_stop_time = #{rewardStopTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="tags != null  and tags != ''">tags = #{tags},</if>
+            <if test="articleId != null  and articleId != ''">article_id = #{articleId},</if>
+            <if test="priority != null ">priority = #{priority},</if>
+            <if test="articleTitle != null  and articleTitle != ''">article_title = #{articleTitle},</if>
+            <if test="image != null  and image != ''">image = #{image},</if>
+            <if test="bgImg != null  and bgImg != ''">bg_img = #{bgImg},</if>
+            <if test="summary != null  and summary != ''">summary = #{summary},</if>
+            <if test="codePrefix != null  and codePrefix != ''">code_prefix = #{codePrefix},</if>
+            <if test="codePrefixDigit != null ">code_prefix_digit = #{codePrefixDigit},</if>
+            <if test="assignType != null ">assign_type = #{assignType},</if>
+            <if test="indexName != null  and indexName != ''">index_name = #{indexName},</if>
+            <if test="isHidden != null ">is_hidden = #{isHidden},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaskById" parameterType="String">
+        delete from tab_task where id = #{id}
+    </delete>
+
+    <delete id="deleteTaskByIds" parameterType="String">
+        delete from tab_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

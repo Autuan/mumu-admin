@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改任务')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-task-edit" th:object="${task}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <input name="articleTitle" id="articleTitle" th:field="*{articleTitle}" class="form-control" type="hidden">
+            <input name="image" id="image" th:field="*{image}" class="form-control" type="hidden">
+            <input name="bgImg" id="bgImg" th:field="*{bgImg}" class="form-control" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务名称：</label>
+                <div class="col-sm-8">
+                    <input name="name" th:field="*{name}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">简介：</label>
+                <div class="col-sm-8">
+                    <input name="summary" th:field="*{summary}" class="form-control" type="text" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">索引名称：</label>
+                <div class="col-sm-8">
+                    <input name="indexName" class="form-control" type="text" th:field="*{indexName}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="font-noraml">缩略图:</label>
+                <div class="file-loading">
+                    <input id="fileinput-demo-1" type="file" name="file" multiple data-min-file-count="1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="font-noraml">二维码背景图:</label>
+                <div class="file-loading">
+                    <input id="fileinput-qrcode" type="file" name="file" multiple data-min-file-count="1">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">任务链接前缀：</label>
+                <div class="col-sm-8">
+                    <input name="prefix" th:field="*{prefix}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">奖励方式：</label>
+                <div class="col-sm-8">
+                    <select id="assignTypeSelect" th:field="*{assignType}" disabled="true" class="form-control m-b" >
+                        <option value="">===请选择===</option>
+                        <option value="0">普通方式</option>
+                        <option value="1">京东拉新</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="rewardDiv">
+                <label class="col-sm-3 control-label">推广奖励额：</label>
+                <div class="col-sm-8">
+                    <input name="reward" th:field="*{reward}" id="reward" class="form-control" type="text" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">标签 ',' 分割：</label>
+                <div class="col-sm-8">
+                    <input name="tags" th:field="*{tags}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">推广文章：</label>
+                <div class="col-sm-2">
+                    <input id="articleTitleInput" class="form-control" type="text" placeholder="输入文章标题">
+                </div>
+                <a id="searchArticle" class="btn btn-info col-sm-2" href="javascript:void(0);">检索</a>
+                <div class="col-sm-4">
+                    <select  class="form-control m-b" id="articleSelect" name="articleId" th:field="*{articleId}">
+                        <option value="" th:text="*{articleTitle}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">优先级：</label>
+                <div class="col-sm-8">
+                    <input name="priority" th:field="*{priority}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "promote/task";
+        $("#form-task-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-task-edit').serialize());
+            }
+        }
+
+        $("input[name='rewardBeginTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='rewardStopTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $(function () {
+            $("#fileinput-qrcode").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': ctx + 'common/upload',
+                overwriteInitial: false,
+                maxFileCount:1,
+                dropZoneTitle:'拖拽文件到这里',
+                initialPreviewAsData: true,
+                initialPreview: [
+                    $('#bgImg').val()
+                ],
+            }).on("fileuploaded", function(event, data, previewId, index) {
+                $('#bgImg').val(data.response.url);
+            });
+            $("#fileinput-demo-1").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': ctx + 'common/upload',
+                overwriteInitial: false,
+                maxFileCount:1,
+                dropZoneTitle:'拖拽文件到这里',
+                initialPreviewAsData: true,
+                initialPreview: [
+                    $('#image').val()
+                ],
+            }).on("fileuploaded", function(event, data, previewId, index) {
+                $('#image').val(data.response.url);
+            }).on("filebatchselected", function(event, data, previewId, index) {
+                $('#fileinput-demo-1').fileinput({initialPreviewAsData:false})
+            });
+            $('#articleSelect').change(function () {
+                let title=$("#articleSelect option:selected").html();
+                $('#articleTitle').val(title);
+            })
+            $('#searchArticle').click(function () {
+                let param = {
+                    'title':$('#articleTitleInput').val(),
+                }
+                Base.Network.post({
+                    url:ctx+'promote/article/custom/list',
+                    data:param,
+                    successParse:function (data) {
+                        let str = '<option value="">---请选择文章---</option>';
+                        for (let i=0;i<data.length;i++) {
+                            str += `<option value="${data[i].id}">${data[i].title}</option>`
+                        }
+                        $('#articleSelect').empty();
+                        $('#articleSelect').append($(str));
+                    }
+                })
+            });
+
+            let assignTypeSelect = $('#assignTypeSelect').val()
+            if(assignTypeSelect === 1 || assignTypeSelect === '1') {
+                $('#rewardDiv').hide()
+            }
+        })
+    </script>
+</body>
+</html>
