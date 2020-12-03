@@ -1,6 +1,7 @@
 package com.autuan.project.front.entity;
 
 
+import com.autuan.common.enums.BusinessErrorEnum;
 import com.autuan.project.front.enums.ReturnMsg;
 import lombok.Data;
 
@@ -11,24 +12,37 @@ public class ReturnResult {
     private String code;
     private String msg;
 
-    //自定义code,msg,data
+    /**
+     * 自定义code,msg,data
+     * @param code
+     * @param msg
+     * @param data
+     */
     private ReturnResult(String code, String msg, Object data) {
         this.data = data;
         this.code = code;
         this.msg = msg;
     }
-    //自定义data
+
+    /**
+     * 自定义data
+     * @param data
+     */
     private ReturnResult(Object data) {
         this.data = data;
         this.code = ReturnMsg.SUCCESS.getErrCode();
         this.msg = ReturnMsg.SUCCESS.getErrMsg();
     }
-    //自定义code,msg
+
+    /**
+     * 自定义code,msg
+     * @param code
+     * @param msg
+     */
     private ReturnResult(String code, String msg){
         this.code =  code;
         this.msg = msg;
     }
-
 
     private ReturnResult() {
         this.code = ReturnMsg.SUCCESS.getErrCode();
@@ -51,9 +65,21 @@ public class ReturnResult {
         return new ReturnResult(code,msg);
     }
 
+    public static ReturnResult error (String code,String msg){
+        return new ReturnResult(code,msg);
+    }
+
     public static ReturnResult error (String msg){
         return new ReturnResult(ReturnMsg.ERROR.getErrCode(),msg);
     }
+
+    /**
+     * 枚举方式错误信息
+     */
+    public static ReturnResult error(BusinessErrorEnum errorEnum) {
+        return new ReturnResult(errorEnum.getCode(),errorEnum.getMsg());
+    }
+
     /***
      * 输入参数：
      *

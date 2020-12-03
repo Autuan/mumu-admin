@@ -3,6 +3,7 @@ package com.autuan.project.mumu.member.service.impl;
 import com.autuan.common.exception.BusinessException;
 import com.autuan.common.utils.Md5Utils;
 import com.autuan.project.mumu.member.domain.SignInReq;
+import com.autuan.project.mumu.member.domain.TabMember;
 import com.autuan.project.mumu.member.domain.TabMemberExample;
 import com.autuan.project.mumu.member.mapper.MemberMapper;
 import com.autuan.project.mumu.member.mapper.TabMemberMapper;
@@ -11,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Administrator
+ */
 @Service
 @Slf4j
 public class MemberCustomServiceImpl implements IMemberCustomService {
@@ -30,5 +34,10 @@ public class MemberCustomServiceImpl implements IMemberCustomService {
         tabMemberMapper.selectOneByExample(example);
 
         throw new BusinessException("已停用");
+    }
+
+    @Override
+    public String generatorToken(TabMember member) {
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.autuan.framework.web.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
+import cn.hutool.core.util.StrUtil;
 import com.autuan.project.front.entity.ReturnResult;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -74,9 +75,17 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public Object businessException(HttpServletRequest request, BusinessException e) {
+        // 前台
+        String requestURI = request.getRequestURI();
+        if (requestURI.startsWith("/front")) {
+            String code = StrUtil.isBlank(e.getCode())?"999999":e.getCode();
+            return ReturnResult.error(code,e.getMessage());
+        }
         log.error(e.getMessage(), e);
+        // 后台管理
         if (ServletUtils.isAjaxRequest(request)) {
-            return AjaxResult.error(e.getMessage());
+            String code = StrUtil.isBlank(e.getCode())?"999999":e.getCode();
+            return ReturnResult.error(code,e.getMessage());
         } else {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.addObject("errorMessage", e.getMessage());
