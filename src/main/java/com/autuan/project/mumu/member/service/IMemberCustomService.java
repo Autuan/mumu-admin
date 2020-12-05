@@ -7,8 +7,9 @@ public interface IMemberCustomService {
     /**
      * 登录
      * @param req
+     * @return token
      */
-    void signIn(SignInReq req);
+    String signIn(SignInReq req);
 
     /**
      * 生成Token

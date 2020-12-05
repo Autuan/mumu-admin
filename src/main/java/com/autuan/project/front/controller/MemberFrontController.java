@@ -28,8 +28,8 @@ public class MemberFrontController {
      */
     @PostMapping("/sign")
     public ReturnResult signIn(@RequestBody @Valid SignInReq req) {
-        memberCustomService.signIn(req);
-        return ReturnResult.ok();
+        String token = memberCustomService.signIn(req);
+        return ReturnResult.ok(token);
     }
 
     @PostMapping("/checkMemberPower")

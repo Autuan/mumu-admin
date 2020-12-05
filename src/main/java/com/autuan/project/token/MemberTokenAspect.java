@@ -47,6 +47,10 @@ public class MemberTokenAspect {
             if(StrUtil.isBlank(mt)){
                 throw new BusinessException(TokenErrorEnum.FAIL);
             }
+            // todo token 存在验证（redis) [Autuan.Yu](12.31)
+            // todo 逻辑删除
+            // todo 服务结束时间
+            // todo 机器码
         }
 
     }
