@@ -18,7 +18,7 @@ public class WebSocketController {
     @PostMapping("/socket/send")
     ReturnResult send(@Valid @RequestBody SendReq sendReq) {
         try {
-            WebSocketServer.sendInfo(sendReq.getMsg(),sendReq.getToUserToken());
+            WebSocketServer.send(sendReq.getMsg(),sendReq.getToUserToken());
         } catch (IOException e) {
             return ReturnResult.error("发生异常");
         }
